@@ -36,7 +36,7 @@ ScrapsはClaude Code向けのプラグインをMarketplaceとして提供して�
 
 https://boykush.github.io/scraps/scraps/install-claude-code-plugin.how-to.html
 
-# プラグインとSkill紹介
+# プラグインとSkills紹介
 
 ScrapsのMarketplaceでは2つのプラグインを提供しています。
 
