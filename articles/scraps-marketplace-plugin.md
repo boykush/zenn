@@ -54,15 +54,21 @@ MCPツール群でナレッジベースの検索・参照ができます。
 - **list_tags**: Tag一覧の取得
 - **lookup_tag_backlinks**: Tagへ向けられている内部リンク一覧
 
+環境変数でMCPサーバーを起動するパスを指定することで、別リポジトリにおいているマークダウンファイル群（Scraps Project）へ容易にアクセスが可能です。
+
 https://boykush.github.io/scraps/scraps/mcp-tools.reference.html
 
 ## scraps-writerプラグイン
 
 AIによるインテリジェントなドキュメント作成を支援するプラグインです。MCPツールと組み合わせて、既存のナレッジベースと連携したScrap作成ができます。
 
+公式Docに書いているようなWikiリンクシンタックスをSkillsとして理解しています。
+
 https://github.com/boykush/scraps/tree/main/plugins/scraps-writer
 
-### `/add-scrap [title] [max-lines]`
+マークダウンファイル作成時の最大行数はプロンプトとして重要であったため、Skillsの引数として任意で受け取るようにしました。
+
+### `/add-scrap [title] [max-lines]`　Skill
 
 任意のトピックで新しいScrapを作成するスキルです。以下を自動で行います。
 
@@ -71,7 +77,9 @@ https://github.com/boykush/scraps/tree/main/plugins/scraps-writer
 - Wikiリンク用の関連Scrap検索
 - 既存Scrapへのバックリンク追加の提案
 
-### `/web-to-scrap [url] [max-lines]`
+知らないトピックをキャッチアップしながら、マークダウンファイルへ吐き出すことができます。
+
+### `/web-to-scrap [url] [max-lines]`　Skill
 
 Web記事をScrapに変換するスキルです。
 
@@ -79,9 +87,13 @@ Web記事をScrapに変換するスキルです。
 - OGPカード表示用のソースリンクを自動追加
 - タグとWikiリンクで既存ナレッジベースに接続
 
+こちらはRSSフィードに流れてくるWeb記事を要約して吐き出すようなケースをサポートします。
+
 # 実践例: IssueベースScrap追加ワークフロー
 
 ここからは実際にこれらのプラグインを活用したワークフローの例として、GitHub Issueをトリガーに `/add-scrap` スキルでScrapを自動生成する仕組みを紹介します。
+
+Scrapsを用いて私自身のナレッジを管理している以下のリポジトリで実践しました。
 
 https://github.com/boykush/wiki
 
@@ -89,22 +101,101 @@ https://github.com/boykush/wiki
 
 GitHub ActionsとClaude Code Actionを組み合わせて、Issueが作成されたら自動的にScrapを生成してPRを作成するワークフローを実装しました。
 
-https://github.com/boykush/wiki/pull/118
+```yaml
+name: Create Scrap from Issue
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  create-scrap:
+    if: github.event.issue.user.login == 'boykush'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
+      - name: Install scraps
+        run: mise install cargo:scraps
+
+      - name: Run Claude with add-scrap skill
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          plugin_marketplaces: |
+            https://github.com/boykush/scraps.git
+          plugins: |
+            scraps-writer@scraps-claude-code-plugins
+          settings: ".claude/settings.json"
+          prompt: |
+            /add-scrap ${{ github.event.issue.title }} max-lines=15
+
+            追加情報:
+            ${{ github.event.issue.body }}
+
+      - name: Create Pull Request
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+
+          BRANCH_NAME="add-scrap/issue-${{ github.event.issue.number }}-${{ github.run_id }}"
+          git checkout -b "$BRANCH_NAME"
+
+          git add scraps/
+          git commit -m "Add scrap: ${{ github.event.issue.title }}"
+          git push origin "$BRANCH_NAME"
+
+          gh pr create \
+            --title "Add scrap: ${{ github.event.issue.title }}" \
+            --body "Closes #${{ github.event.issue.number }}" \
+            --base main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
 ワークフローのポイントは以下です。
 
-- `anthropics/claude-code-action@v1` を使用
 - scraps Marketplaceからscraps-writerプラグインを読み込み
-- Issueのタイトルを `/add-scrap` スキルに渡して実行
+- Issueのタイトルを `/add-scrap` Skillsに渡して実行
 - 生成されたScrapファイルを含むPRを自動作成
 
 ## 実際の動作例
 
 実際にIssueを作成してワークフローが動作した例です。
 
-https://github.com/boykush/wiki/issues/119
+例として「Platform Engineering Maturity Model」を作成すると、自動的に以下のようなファイルのPRが生成されました。
 
-このIssue「Platform Engineering Maturity Model」を作成すると、自動的に以下のPRが生成されました。
+```md
+## PEMM
+
+#[[Platform Engineering]] #[[Cloud Native]] #[[Team Organization]]
+
+[[CNCF]]が提供する[[Platform Engineering]]の成熟度を評価するフレームワーク
+
+5つの評価軸で組織のプラットフォーム進捗を測定する
+
+- Investment（投資）
+- Adoption（採用）
+- Interfaces（インターフェース）
+- Operations（運用）
+- Measurement（測定）
+
+2026年までに大規模ソフトウェア組織の80%がプラットフォームチームを持つとGartnerが予測しており、AI統合、測定実践、開発者体験の向上が重要な要素となる
+
+<https://tag-app-delivery.cncf.io/whitepapers/platform-eng-maturity-model/>
+```
 
 https://github.com/boykush/wiki/pull/120
 
@@ -112,11 +203,3 @@ https://github.com/boykush/wiki/pull/120
 
 # まとめ
 
-Claude Code Plugin Marketplaceを使うことで、自作ツールの機能をプラグインとして配布・共有できるようになります。Scrapsでは以下を提供しています。
-
-- **mcp-server**: ナレッジベースの検索・参照
-- **scraps-writer**: AIによるインテリジェントなScrap作成
-
-GitHub ActionsとClaude Code Actionを組み合わせれば、Issueをトリガーにした自動ドキュメント生成のようなワークフローも実現できます。
-
-前回の記事ではMCPサーバー経由で「自分のナレッジを参照する」ことができましたが、今回のプラグイン・スキルによって「自分のナレッジに追加する」部分も自動化できるようになりました。インプットとアウトプットの両方でLLMと自分の脳が繋がっていく感覚があります。
