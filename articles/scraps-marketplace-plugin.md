@@ -60,7 +60,7 @@ https://boykush.github.io/scraps/scraps/mcp-tools.reference.html
 
 ## scraps-writerプラグイン
 
-AIによるインテリジェントなドキュメント作成を支援するプラグインです。MCPツールと組み合わせて、既存のナレッジベースと連携したScrap作成ができます。
+AIによるインテリジェントなドキュメント作成を支援するプラグインです。MCPツールと組み合わせて、既存のナレッジベースと連携したScrap（マークダウンファイル）作成ができます。
 
 Scraps公式Docに書いているようなWikiリンクシンタックスをSkillsとして理解しています。
 
@@ -70,7 +70,7 @@ https://github.com/boykush/scraps/tree/main/plugins/scraps-writer
 
 ### `/add-scrap [title] [max-lines]`　Skill
 
-任意のトピックで新しいScrapを作成するスキルです。以下を自動で行います。
+任意のトピックで新しいマークダウンファイルを作成するスキルです。以下を自動で行います。
 
 - Web検索を通じたトピック調査
 - 関連する既存タグの識別
@@ -81,7 +81,7 @@ https://github.com/boykush/scraps/tree/main/plugins/scraps-writer
 
 ### `/web-to-scrap [url] [max-lines]`　Skill
 
-Web記事をScrapに変換するスキルです。
+Web記事をマークダウンファイルに変換するスキルです。
 
 - 記事を取得して要約を生成
 - OGPカード表示用のソースリンクを自動追加
