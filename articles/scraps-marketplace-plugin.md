@@ -2,9 +2,11 @@
 title: "CLIツール×Pluginsですぐに始める、Claude Code駆動のナレッジ管理"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["claudecode", "cli", "github"]
+topics: ["claudecode", "cli", "github", "mcp"]
 published: false
 ---
+
+# はじめに
 
 前回、Wikiリンク記法で書いたマークダウンファイルを静的サイトへビルドするCLIツール「Scraps」のMCPサーバー接続について紹介しました。
 
@@ -12,8 +14,10 @@ https://zenn.dev/boykush/articles/1aa8848b23f09a
 
 今回はその続きとして、Claude Code Plugin Marketplaceを使ったプラグインの配布と、Scrapsが提供するプラグイン・スキルについて紹介します。
 
-https://github.com/boykush/scraps
-https://boykush.github.io/scraps/
+下記の記事を書いた当初はSSGを中心とする機能開発をしていましたが、CLIツールである強みを生かしてMCPサーバーを中心とするAI連携に力を入れています。
+
+https://zenn.dev/boykush/articles/0b13f54335dbb7
+
 
 # Claude Code Plugin Marketplaceとは
 
