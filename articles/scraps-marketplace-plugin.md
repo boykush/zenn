@@ -14,9 +14,7 @@ https://zenn.dev/boykush/articles/1aa8848b23f09a
 
 今回はその続きとして、Claude Code Plugin Marketplaceを使ったプラグインの配布と、Scrapsが提供するプラグイン・スキルについて紹介します。
 
-下記の記事を書いた当初はSSGを中心とする機能開発をしていましたが、CLIツールである強みを生かしてMCPサーバーを中心とするAI連携に力を入れています。
-
-https://zenn.dev/boykush/articles/0b13f54335dbb7
+開発当初はSSGを中心とする機能開発をしていましたが、CLIツールである強みを生かしてMCPサーバーを中心とするAI連携に力を入れています。
 
 
 # Claude Code Plugin Marketplaceとは
@@ -36,6 +34,8 @@ ScrapsはClaude Code向けのプラグインをMarketplaceとして提供して�
 
 追加後は `/plugin` からプラグインを参照・インストールできます。
 
+https://boykush.github.io/scraps/scraps/install-claude-code-plugin.how-to.html
+
 # プラグインとSkill紹介
 
 ScrapsのMarketplaceでは2つのプラグインを提供しています。
@@ -45,7 +45,6 @@ ScrapsのMarketplaceでは2つのプラグインを提供しています。
 前回の記事で紹介したMCPサーバー機能をプラグインとして提供しています。
 
 https://github.com/boykush/scraps/tree/main/plugins/mcp-server
-https://boykush.github.io/scraps/scraps/install-claude-code-plugin.how-to.html
 
 MCPツール群でナレッジベースの検索・参照ができます。
 
