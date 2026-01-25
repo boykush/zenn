@@ -3,7 +3,7 @@ title: "CLIツール×Pluginsですぐに始める、Claude Code駆動のナレ�
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["claudecode", "cli", "github", "mcp", "rust"]
-published: false
+published: true
 ---
 
 # はじめに
