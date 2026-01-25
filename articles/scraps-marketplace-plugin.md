@@ -2,7 +2,7 @@
 title: "CLIツール×Pluginsですぐに始める、Claude Code駆動のナレッジ管理"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["claudecode", "cli", "github", "mcp"]
+topics: ["claudecode", "cli", "github", "mcp", "rust"]
 published: false
 ---
 
@@ -62,7 +62,7 @@ https://boykush.github.io/scraps/scraps/mcp-tools.reference.html
 
 AIによるインテリジェントなドキュメント作成を支援するプラグインです。MCPツールと組み合わせて、既存のナレッジベースと連携したScrap作成ができます。
 
-公式Docに書いているようなWikiリンクシンタックスをSkillsとして理解しています。
+Scraps公式Docに書いているようなWikiリンクシンタックスをSkillsとして理解しています。
 
 https://github.com/boykush/scraps/tree/main/plugins/scraps-writer
 
@@ -177,6 +177,8 @@ jobs:
 
 例として「Platform Engineering Maturity Model」を作成すると、自動的に以下のようなファイルのPRが生成されました。
 
+最大行数に加えて、内容のフォーマットは `CLAUDE.md` にて指示するのが良いと思います。余談として[Scraps自体にTemplate機能はある](https://boykush.github.io/scraps/scraps/use-templates.how-to.html)のですが、LLMによって有用性が減ってきたのでDeprecatedにするかもしれません。
+
 ```md
 ## PEMM
 
@@ -197,9 +199,18 @@ jobs:
 <https://tag-app-delivery.cncf.io/whitepapers/platform-eng-maturity-model/>
 ```
 
+以下、PRリンクです
+
 https://github.com/boykush/wiki/pull/120
 
-`/add-scrap` スキルがWeb検索でトピックを調査し、既存のナレッジベースから関連タグを選定、Wikiリンクで接続可能なScrapを提案してくれます。
+[Actionsの実行ログ](https://github.com/boykush/wiki/actions/runs/21327834839)を見ても、実際にMCPサーバーを呼び出しながらSkillsによってファイルが書き出されていることを把握することができます。
+
+これで後でキャッチアップしたいトピックをIssueにメモすれば、自動でPRが作成されキャッチアップが済んだらPRマージ、のような自動化を実現することができました。
 
 # まとめ
 
+実践例について、途中まではRSSフィードから自動でWeb記事を読み取り、 `/web-to-scrap` SkillsでPR作成する自動化を考えていたのですが、少々複雑で大規模になりそうだったため今回の内容でスモールスタートしました。
+
+とはいえ普段から行っていたキャッチアップメモのIssueを生かして自動化フローを組めたのはよかったです。
+
+Claude CodeのPluginsやSkillsについて、自身で手を動かして理解を深めることができました👏
