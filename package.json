@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/boykush/zenn/issues"
   },
-  "homepage": "https://github.com/boykush/zenn#readme",
-  "dependencies": {
-    "zenn-cli": "^0.1.158"
-  }
+  "homepage": "https://github.com/boykush/zenn#readme"
 }
