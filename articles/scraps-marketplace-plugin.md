@@ -1,8 +1,8 @@
 ---
-title: "CLIツール×Pluginsですぐに始める、Claude Code駆動のナレッジ管理"
+title: "CLIツール×Pluginsで始める、Claude Code駆動のナレッジ管理"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["claude", "claudecode", "cli", "githubactions", "mcp", "rust"]
+topics: ["claude", "claudecode", "cli", "githubactions", "mcp"]
 published: true
 ---
 
