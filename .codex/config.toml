@@ -1,0 +1,8 @@
+[mcp_servers.scraps]
+args = [
+    "mcp",
+    "serve",
+    "--path",
+    "/Users/boykush/github/boykush/repositories/wiki/",
+]
+command = "scraps"
